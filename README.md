@@ -1,4 +1,4 @@
-# ProcessWire PrismJS Code Highlighter
+# ProcessWire Prism JS Syntax Highlighter
 A module to parse given HTML and syntax-highlight `code` elements using [Prism](http://prismjs.com)
  
 ## Features
@@ -11,15 +11,15 @@ A module to parse given HTML and syntax-highlight `code` elements using [Prism](
 ## Installation
 + Add module to `/site/modules/` and then install.  
   Or go to `Modules > Install > Add New` and use any of the options provided to to install.
-+ Create a text/textarea field and pick **Prism Code Highlighter** from `Details > Text Formatters`.
++ Create a text/textarea field and pick **Prism Syntax Highlighter** from `Details > Text Formatters`.
   > **Protip:** This module parses HTML markup, so it should come after HTML parsers such as Markdown textformatters.  
   
 + Add `code` elements within the field content with `language-xxxx` classes.
   Or pick a default language from configuration page if you are unable to specify the classes.
   
-+ Select any plugins you want. To use some plugins, extra classes is required. See [plugin documentation](http://prismjs.com/#plugins).
++ Select any plugins you want. To use some plugins, extra classes are required. See [plugin documentation](http://prismjs.com/#plugins).
 + Install these recommended modules for the best experience:
-    + [Parsedown Extra module](http://modules.processwire.com/modules/textformatter-parsedown-extra-plugin/) to render Markdown Extra into HTML. You can also set custom attributes for each element unlike vanilla Markdown.
+    + [Parsedown Extra module](http://modules.processwire.com/modules/textformatter-parsedown-extra-plugin/) to render [Markdown Extra](http://parsedown.org/extra/) into HTML. You can also set custom attributes for each element unlike vanilla Markdown.
 
 
 

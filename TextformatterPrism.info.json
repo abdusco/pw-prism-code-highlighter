@@ -1,9 +1,9 @@
 {
-    "title": "Prism Code Highlighter",
+    "title": "Prism Syntax Highlighter",
     "version": "0.0.1",
     "author": "abdus",
     "summary": "Prism is a lightweight, extensible syntax highlighter, built with modern web standards in mind.",
-    "href": "https://abdus.co",
+    "href": "https://github.com/abdusco/pw-prism-code-highlighter",
     "autoload": false,
     "singular": false,
     "requires": [
