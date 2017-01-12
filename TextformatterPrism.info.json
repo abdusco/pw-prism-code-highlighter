@@ -1,0 +1,13 @@
+{
+    "title": "Prism Code Highlighter",
+    "version": "0.0.1",
+    "author": "abdus",
+    "summary": "Prism is a lightweight, extensible syntax highlighter, built with modern web standards in mind.",
+    "href": "https://abdus.co",
+    "autoload": false,
+    "singular": false,
+    "requires": [
+        "PHP>=5.5",
+        "ProcessWire>=3.0"
+    ]
+}
