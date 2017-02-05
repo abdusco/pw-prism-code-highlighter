@@ -50,4 +50,3 @@ wire()->addHookAfter('TextformatterPrism::getCustomJs', function (HookEvent $eve
 });
 ```
     
-    
