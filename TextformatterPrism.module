@@ -53,7 +53,8 @@ class TextformatterPrism extends Textformatter
                 }
             }
         }
-        // check if there's any match
+        // remove duplicates
+        $langs = array_unique($langs);
         if (!count($langs)) return;
 
         $markup = $dom->saveHTML($dom->getElementsByTagName('body')->item(0));
@@ -90,70 +91,68 @@ class TextformatterPrism extends Textformatter
         return $className;
     }
 
-    public function ___getCustomCss($parsedLanguages, $plugins)
+    public function ___getCss($languages, $plugins)
     {
-        return $this->customCss;
+        $css = [];
+        // include theme
+        $css[] = $this->baseUrl . "prism/themes/$this->theme";
+        // include plugins css
+        foreach ($this->plugins as $plugin) {
+            $pluginCssPath = $this->basePath . "prism/plugins/$plugin/prism-$plugin.css";
+            if (file_exists($pluginCssPath)) {
+                $css[] = $this->baseUrl . "prism/plugins/$plugin/prism-$plugin.css";
+            }
+        }
+        // include custom css
+        if($this->customCss) $css[] = $this->customCss;
+
+        return $css;
     }
 
-    public function ___getCustomJs($parsedLanguages, $plugins)
+    public function ___getJs($languages, $plugins)
     {
-        return $this->customJs;
+        $js = [];
+
+        // include main script
+        $js[] = $this->baseUrl . 'prism/prism.js';
+        // include language parsers
+        if ($this->autoInclude) {
+            foreach ($languages as $lang) {
+                $langJs = $lang . ($this->useMinified ? '.min' : '');
+                $scriptPath = $this->basePath . "prism/components/prism-$langJs.js";
+                // prevent 404s from nonexistent files
+                if (file_exists($scriptPath)) {
+                    $js[] = $this->baseUrl . "prism/components/prism-$langJs.js";
+                }
+            }
+
+            // include plugins scripts
+            foreach ($this->plugins as $plugin) {
+                $pluginJs = $plugin . ($this->useMinified ? '.min' : '');
+                $scriptPath = $this->basePath . "prism/plugins/$plugin/prism-$pluginJs.js";
+                // prevent 404s from nonexistent files
+                if (file_exists($scriptPath)) {
+                    $js[] = $this->baseUrl . "prism/plugins/$plugin/prism-$pluginJs.js";
+                }
+            }
+
+        }
+
+        // include custom js specified in module settings
+        if ($this->customJs) $js[] = $this->customJs;
+
+        return $js;
     }
 
     private function renderIncludes($languages)
     {
-
-        $js = new FilenameArray();
-        $css = new FilenameArray();
-        $customJs = $this->getCustomJs($languages, $this->plugins);
-        $customCss = $this->getCustomCss($languages, $this->plugins);
-
-        // include js files
-        $js->add($this->baseUrl . 'prism/prism.js');
-        if ($this->autoInclude) {
-            foreach ($languages as $lang) {
-                // check if minified is requested
-                $langJs = $lang . ($this->useMinified ? '.min' : '');
-                $js->add($this->baseUrl . "prism/components/prism-$langJs.js");
-            }
-        }
-
-        // include theme css
-        $css->add($this->baseUrl . "prism/themes/$this->theme");
-
-        // include plugins and its css
-        foreach ($this->plugins as $plugin) {
-            $pluginJs = $plugin . ($this->useMinified ? '.min' : '');
-
-            $js->add($this->baseUrl . "prism/plugins/$plugin/prism-$pluginJs.js");
-            if (file_exists($this->basePath . "prism/plugins/$plugin/prism-$plugin.css")) {
-                $css->add($this->baseUrl . "prism/plugins/$plugin/prism-$plugin.css");
-            }
-        }
-
-        // include custom js
-        if (!empty($customJs)) {
-            if (is_array($customJs)) {
-                foreach ($customJs as $jj) $js->add($jj);
-            } else {
-                $js->add($customJs);
-            }
-        }
-
-        // include custom css
-        if (!empty($customCss)) {
-            if (is_array($customCss)) {
-                foreach ($customCss as $cc) $css->add($cc);
-            } else {
-                $css->add($customCss);
-            }
-        };
+        $js = $this->getJs($languages, $this->plugins);
+        $css = $this->getCss($languages, $this->plugins);
 
         return wireRenderFile($this->basePath . '/markup/markup.php', [
-                'js' => $js,
-                'css' => $css
-            ]
-        );
+            'js' => $js,
+            'css' => $css
+        ]);
     }
 
     public function init()
@@ -162,7 +161,6 @@ class TextformatterPrism extends Textformatter
         if (!extension_loaded('xml')) {
             $this->error("PHP XML extension isn't installed, please install it to use this module.");
         }
-
 
         // set base paths and urls for scripts
         $this->basePath = $this->config->path($this->className);
