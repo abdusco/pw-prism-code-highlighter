@@ -1,6 +1,12 @@
 # ProcessWire Prism JS Syntax Highlighter
 A module to parse given HTML and syntax-highlight `code` elements using [Prism](http://prismjs.com)
  
+## Changelog
++ v2.0.0
+    + Improved language parsing logic
+    + Prevent 404s from nonexistent files
+    + Renamed hookable functions, **update your hooks accordingly**. See below for more information.
+
 ## Features
 + Support for [120 languages](http://prismjs.com/#languages-list)
 + Very lightweight, core weights 2KB minified & gzipped.  
@@ -25,28 +31,35 @@ A module to parse given HTML and syntax-highlight `code` elements using [Prism](
 
 ## Customization
 + Go to module configuration to specify:
-    + Auto inclusion of highlighters for parsed languages
-    + Default language for inline `code` elements or ones without `language-xxxx` classes.
-    + Ability to use minified/non-minified component and parser files
-    + Plugins
-    + Theme
-    + Custom JS and CSS for configuration / theming
++ Auto inclusion of highlighters for parsed languages
++ Default language for inline `code` elements or ones without `language-xxxx` classes.
++ Ability to use minified/non-minified component and parser files
++ Plugins
++ Themes
++ Custom JS and CSS for configuration / theming
 + Ability to use hooks to specify custom CSS and JS
     
 ## Hooks
-Hook into `TextformatterPrism::getCustomCss` and `TextformatterPrism::getCustomJs` in your ready.php file  and return an (array of ) URLs as follows:
+Hook into `TextformatterPrism::getCss` and `TextformatterPrism::getJs` in your ready.php file. 
++ `$event->arguments` includes two arguments, first one `$languages` an array of parsed language names, second `$plugins` an array of picked plugin names. To include your own JS/CSS mutate `$event->return`.
  
 ```php
 // specify custom CSS
-wire()->addHookAfter('TextformatterPrism::getCustomCss', function (HookEvent $event) {
-    $event->return = 'path/to/custom.css';
+wire()->addHookAfter('TextformatterPrism::getCss', function (HookEvent $event) {
+    $css = $event->return;
+    $css[] = '/path/to/custom.css'
+    // return an array of urls
+    $event->return = $css;
 });
 ```
 
 ```php
 // Specify custom JS
-wire()->addHookAfter('TextformatterPrism::getCustomJs', function (HookEvent $event) {
-    $event->return = ['path/to/custom.js', 'another/custom.js'];
+wire()->addHookAfter('TextformatterPrism::getJs', function (HookEvent $event) {
+    $js = $event->return;
+    $js[] = '/path/to/custom.js'
+    // return an array of urls
+    $event->return = $js;
 });
 ```
     
