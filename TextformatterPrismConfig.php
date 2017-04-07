@@ -118,7 +118,7 @@ class TextformatterPrismConfig extends ModuleConfig
         /* @var $confSet InputfieldFieldset */
         $confSet = $this->modules->get('InputfieldFieldset');
         $confSet->label = 'Advanced Configuration';
-        $confSet->description = "Specify custom JS for configuration or custom CSS for styling.\nYou can use `TextformatterPrism::getCustomJs` and `TextformatterPrism::getCustomCss` hooks to specify (an array of) URLs as well.\nThese hooks will be provided an array of parsed languages and array of selected plugins as arguments.";
+        $confSet->description = "Specify custom JS for configuration or custom CSS for styling.\nYou can use `TextformatterPrism::getJs` and `TextformatterPrism::getCss` hooks to specify (an array of) URLs as well.\nThese hooks will be provided an array of parsed languages and array of selected plugins as arguments. Return an array of urls from these hooks";
 
         $confJs = $this->modules->get('InputfieldText');
         $confJs->attr('name', 'customJs');
